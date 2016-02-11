@@ -3,7 +3,7 @@ namespace NielsBot\Util;
 
 class EmojiMapper
 {
-	private $source = 'https://raw.githubusercontent.com/iamcal/emoji-data/master/build/data_emoji_names_more.txt';
+	private $source = 'https://raw.githubusercontent.com/iamcal/emoji-data/master/build/data_emoji_names.txt';
 
 	public function remap(){
 		mb_internal_encoding("UTF-8");
