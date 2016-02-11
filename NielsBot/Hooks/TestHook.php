@@ -5,5 +5,9 @@ use NielsBot\Core\Update;
 hook('troll')
 	->cmd(['troll', 'trollface', '9fag'])
 	->func(function (Update $update) {
-		$update->getChat()->sendMessage(':trollface: 😆');
+		$update->getChat()->sendMessage(':trollface: ' . "\u{261D}");
+
+		// Emoji parsing:
+		// replace name to unicode:
+		// $str = str_replace('point_up', "\u{261D}", $str);
 	});
