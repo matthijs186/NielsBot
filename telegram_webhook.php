@@ -11,11 +11,7 @@ spl_autoload_register(function ($cls) {
 });
 
 Telegram::setToken($_GET['token'] ?? null);
-$updates = json_decode(file_get_contents('php://input'));
-
-if(!isset($updates['ok']) || !$updates['ok'])
-	die('Something went wrong.');
+$update = json_decode(file_get_contents('php://input'));
 
 $bot = new NielsBot();
-foreach($updates['result'] as $update)
-	$bot->update(new TelegramUpdate($update['message'] ?? []));
+$bot->update(new TelegramUpdate($update['message'] ?? []));
