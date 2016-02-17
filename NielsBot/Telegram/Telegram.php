@@ -26,8 +26,6 @@ class Telegram
 	 * @return mixed
 	 */
 	public static function api($method, $data = []){
-		echo 'New request to ' . $method . PHP_EOL;
-
 		return json_decode(file_get_contents('https://api.telegram.org/bot' . self::$token . '/' . $method . '?' . http_build_query($data)), true);
 	}
 }

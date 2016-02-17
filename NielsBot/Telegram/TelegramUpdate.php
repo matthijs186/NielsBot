@@ -14,6 +14,8 @@ class TelegramUpdate extends Update
 		$this->chat = new TelegramChat($update['chat'] ?? null);
 		$this->user = new TelegramUser($update['from'] ?? null);
 
+		$this->data['message'] = $update['text'];
+
 		if($update['text'] ?? false) {
 			if (substr($update['text'], 0, 1) == '/') {
 				$this->trigger = Trigger::COMMAND;

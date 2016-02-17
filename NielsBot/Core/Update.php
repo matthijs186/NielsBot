@@ -5,6 +5,7 @@ abstract class Update
 {
 	protected $chat;
 	protected $user;
+	protected $data = [];
 
 	/**
 	 * @return Chat
@@ -31,4 +32,17 @@ abstract class Update
 	 * @return string
 	 */
 	public abstract function getTriggerSub();
+
+	/**
+	 * @param string $key
+	 *
+	 * @return mixed|null
+	 */
+	public function getData($key)
+	{
+		if(isset($this->data[$key]))
+			return $this->data[$key];
+
+		return null;
+	}
 }

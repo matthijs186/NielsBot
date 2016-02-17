@@ -6,4 +6,4 @@ spl_autoload_register(function ($cls) {
 		require_once $path;
 });
 
-print_r((new \NielsBot\Util\EmojiMapper())->remap());
+print_r((new \NielsBot\Util\EmojiParser())->parse('Dit is een test :airplane:'));

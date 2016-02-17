@@ -2,12 +2,14 @@
 use function NielsBot\Core\hook;
 use NielsBot\Core\Update;
 
-hook('troll')
-	->cmd(['troll', 'trollface', '9fag'])
+hook('emoji')
+	->cmd(['emoji', 'emoticon', ':)'])
 	->func(function (Update $update) {
-		$update->getChat()->sendMessage(':trollface: ' . "\u{261D}");
+		$msg = $update->getData('message');
 
-		// Emoji parsing:
-		// replace name to unicode:
-		// $str = str_replace('point_up', "\u{261D}", $str);
+		//fixme: quick hack because there is not much functionality yet..
+		$msg = explode(' ', $msg, 2);
+		$msg = $msg[1] ?? $msg[0];
+
+		$update->getChat()->sendMessage($msg);
 	});

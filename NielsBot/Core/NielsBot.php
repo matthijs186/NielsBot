@@ -1,11 +1,14 @@
 <?php
 namespace NielsBot\Core;
 
+use NielsBot\Util\EmojiParser;
+
 class NielsBot
 {
 	private static $instance;
 	private $hooks;
 	private $triggers;
+	private $emojiParser;
 
 	public function __construct()
 	{
@@ -83,5 +86,13 @@ class NielsBot
 	public static function getInstance()
 	{
 		return self::$instance;
+	}
+
+	public function getEmojiParser()
+	{
+		if($this->emojiParser == null)
+			$this->emojiParser = new EmojiParser();
+
+		return $this->emojiParser;
 	}
 }

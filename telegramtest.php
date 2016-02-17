@@ -20,3 +20,5 @@ if(!isset($updates['ok']) || !$updates['ok'])
 $bot = new NielsBot();
 foreach($updates['result'] as $update)
 	$bot->update(new TelegramUpdate($update['message'] ?? []));
+
+$updates = Telegram::api('getUpdates');

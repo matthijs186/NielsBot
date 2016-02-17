@@ -3,6 +3,7 @@ namespace NielsBot\Telegram;
 
 
 use NielsBot\Core\Chat;
+use NielsBot\Core\NielsBot;
 
 class TelegramChat extends Chat
 {
@@ -17,7 +18,7 @@ class TelegramChat extends Chat
 	{
 		Telegram::api('sendMessage', [
 			'chat_id' => $this->id,
-			'text' => $string,
+			'text' => NielsBot::getInstance()->getEmojiParser()->parse($string),
 			'parse_mode' => 'markdown'
 		]);
 	}
