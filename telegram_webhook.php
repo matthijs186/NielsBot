@@ -10,8 +10,11 @@ spl_autoload_register(function ($cls) {
 		require_once $path;
 });
 
-Telegram::setToken($_GET['token'] ?? null);
-$update = json_decode(file_get_contents('php://input'));
+if(!isset($_GET['token']))
+	die;
+
+Telegram::setToken($_GET['token']);
+$update = json_decode(file_get_contents('php://input'), true);
 
 $bot = new NielsBot();
 $bot->update(new TelegramUpdate($update['message'] ?? []));
