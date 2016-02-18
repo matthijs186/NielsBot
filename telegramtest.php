@@ -11,12 +11,12 @@ spl_autoload_register(function ($cls) {
 });
 
 Telegram::setToken(file_get_contents(__DIR__ . '/BOT_TOKEN'));
+
 $updates = Telegram::api('getUpdates');
-print_r($updates);
 
 if(!isset($updates['ok']) || !$updates['ok'])
 	die('Something went wrong.');
 
 $bot = new NielsBot();
 foreach($updates['result'] as $update)
-	$bot->update(new TelegramUpdate($update['message'] ?? []));
+	new TelegramUpdate($update['message']);

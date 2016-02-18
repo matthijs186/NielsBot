@@ -1,80 +1,96 @@
 <?php
 namespace NielsBot\Core;
 
+use NielsBot\Plugins\Event;
+use NielsBot\Plugins\Plugin;
 use NielsBot\Util\EmojiParser;
 
 class NielsBot
 {
+	/**
+	 * @var NielsBot
+	 */
 	private static $instance;
-	private $hooks;
-	private $triggers;
+
+	/**
+	 * @var Plugin[]
+	 */
+	private $plugins;
+
+	/**
+	 * @var EmojiParser
+	 */
 	private $emojiParser;
 
 	public function __construct()
 	{
 		self::$instance = $this;
 
-		new Functions(); // Create simple functions
-
-		$this->triggers = [];
-
-		$this->addHooks(__DIR__ . '/../Hooks/'); // todo: Move to config?
+		$this->plugins = [];
+		$this->findPlugins(__DIR__ . '/../../Plugins/');
 	}
 
-	private function addHooks($folder)
+	/**
+	 * @param string $folder
+	 */
+	private function findPlugins($folder)
 	{
 		if (!is_dir($folder))
 			return;
 
 		foreach (glob($folder . '*') as $file) {
 			if (is_dir($file))
-				$this->addHooks($file);
+				$this->findPlugins($file);
 			else if (substr($file, -4) == '.php')
 				require_once $file;
 		}
 	}
 
 	/**
-	 * @param string $trigger
-	 * @param string $sub
-	 * @param Hook $hook
+	 * @param Plugin $plugin
 	 */
-	public function addTrigger($trigger, $sub, $hook)
+	public function registerPlugin($plugin)
 	{
-		if(!isset($this->triggers[$trigger]))
-			$this->triggers[$trigger] = [];
-
-		if(!isset($this->triggers[$trigger][$sub]))
-			$this->triggers[$trigger][$sub] = [];
-
-		$this->triggers[$trigger][$sub][] = $hook;
+		$this->plugins[] = $plugin;
 	}
 
 	/**
-	 * @param string $name
-	 * @return Hook
+	 * @return EmojiParser
 	 */
-	public function createHook($name)
+	public function getEmojiParser()
 	{
-		$hook = new Hook($name);
-		$this->hooks[] = $hook;
+		if($this->emojiParser == null)
+			$this->emojiParser = new EmojiParser();
 
-		return $hook;
+		return $this->emojiParser;
 	}
 
 	/**
-	 * @param Update $update
+	 * @param string $event
+	 * @param string|string[] $type
+	 * @param Event $payload
 	 */
-	public function update($update)
+	public function triggerEvent($event, $type, $payload)
 	{
-		$trigger = $update->getTrigger();
-		$triggerSub = $update->getTriggerSub();
+		if($payload == null && $type != null) {
+			$payload = $type;
+			$type = null;
+		}
 
-		if(isset($this->triggers[$trigger])) {
-			if (isset($this->triggers[$trigger][$triggerSub])) {
-				/** @var Hook $hook */
-				foreach ($this->triggers[$trigger][$triggerSub] as $hook) {
-					$hook->exec($update);
+		foreach ($this->plugins as $plugin) {
+			$events = $plugin->getEvents();
+
+			if (isset($events[$event])) {
+				if (isset($events[$event][$type])) {
+					foreach($events[$event][$type] as $callable) {
+						$callable($payload);
+					}
+				}
+
+				if ($events[$event]['*']) {
+					foreach($events[$event]['*'] as $callable) {
+						$callable($payload);
+					}
 				}
 			}
 		}
@@ -86,13 +102,5 @@ class NielsBot
 	public static function getInstance()
 	{
 		return self::$instance;
-	}
-
-	public function getEmojiParser()
-	{
-		if($this->emojiParser == null)
-			$this->emojiParser = new EmojiParser();
-
-		return $this->emojiParser;
 	}
 }

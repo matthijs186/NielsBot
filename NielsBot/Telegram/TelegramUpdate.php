@@ -1,48 +1,31 @@
 <?php
 namespace NielsBot\Telegram;
 
-use NielsBot\Core\Trigger;
-use NielsBot\Core\Update;
+use NielsBot\Core\NielsBot;
+use NielsBot\Plugins\Event;
+use NielsBot\Plugins\MessageEvent;
 
-class TelegramUpdate extends Update
+class TelegramUpdate
 {
-	private $trigger;
-	private $triggerSub;
-
 	public function __construct($update)
 	{
-		$this->chat = new TelegramChat($update['chat'] ?? null);
-		$this->user = new TelegramUser($update['from'] ?? null);
+		$chat = new TelegramChat($update['chat'] ?? null);
+		//$user = new TelegramUser($update['from'] ?? null);
 
-		$this->data['message'] = $update['text'];
+		print_r($update);
 
-		if($update['text'] ?? false) {
-			if (substr($update['text'], 0, 1) == '/') {
-				$this->trigger = Trigger::COMMAND;
-				$this->triggerSub = explode(' ', substr($update['text'], 1))[0];
-			} else {
-				$this->trigger = Trigger::MESSAGE;
-				$this->triggerSub = $update['text'];
-			}
-		}
+		if(isset($update['text']))
+			$this->trigger('message', new MessageEvent($chat, $update['text']));
 
-		//todo multiple triggers!?
-		// Send triggers as argument in constructor?
+		//todo add more triggers
 	}
 
 	/**
-	 * @return int
+	 * @param string $event
+	 * @param string|string[] $type
+	 * @param Event $payload
 	 */
-	public function getTrigger()
-	{
-		return $this->trigger;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getTriggerSub()
-	{
-		return $this->triggerSub;
+	private function trigger($event, $type = null, $payload = null){
+		NielsBot::getInstance()->triggerEvent($event, $type, $payload);
 	}
 }
