@@ -17,4 +17,4 @@ Telegram::setToken($_GET['token']);
 $update = json_decode(file_get_contents('php://input'), true);
 
 $bot = new NielsBot();
-$bot->update(new TelegramUpdate($update['message'] ?? []));
+new TelegramUpdate($update['message']);
