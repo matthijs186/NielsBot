@@ -18,5 +18,12 @@ if(!isset($updates['ok']) || !$updates['ok'])
 	die('Something went wrong.');
 
 $bot = new NielsBot();
-foreach($updates['result'] as $update)
+$latestUpdate = null;
+foreach($updates['result'] as $update) {
+	$latestUpdate = $update['update_id'];
+
 	new TelegramUpdate($update['message']);
+}
+
+if($latestUpdate != null)
+	Telegram::api('getUpdates', ['offset' => $latestUpdate + 1]);

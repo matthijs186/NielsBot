@@ -87,7 +87,7 @@ class NielsBot
 					}
 				}
 
-				if ($events[$event]['*']) {
+				if (isset($events[$event]['*'])) {
 					foreach($events[$event]['*'] as $callable) {
 						$callable($payload);
 					}

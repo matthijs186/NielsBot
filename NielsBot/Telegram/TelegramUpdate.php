@@ -2,6 +2,7 @@
 namespace NielsBot\Telegram;
 
 use NielsBot\Core\NielsBot;
+use NielsBot\Plugins\CommandEvent;
 use NielsBot\Plugins\Event;
 use NielsBot\Plugins\MessageEvent;
 
@@ -14,8 +15,15 @@ class TelegramUpdate
 
 		print_r($update);
 
-		if(isset($update['text']))
-			$this->trigger('message', new MessageEvent($chat, $update['text']));
+		if(isset($update['text'])) {
+			if(substr(trim($update['text']), 0, 1) == '/'){
+				$parts = explode(' ', substr(trim($update['text']), 1), 2); //TODO bot @mention support for commands (example: /help@NielsBot)
+				print_r($parts);
+				$this->trigger('command', $parts[0], new CommandEvent($chat, $parts[0], $parts[1]));
+			}else {
+				$this->trigger('message', new MessageEvent($chat, $update['text']));
+			}
+		}
 
 		//todo add more triggers
 	}
