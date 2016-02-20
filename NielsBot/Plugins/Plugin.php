@@ -7,12 +7,25 @@ use NielsBot\Core\NielsBot;
 class Plugin
 {
 	/**
+	 * @var string
+	 */
+	private $name;
+
+	/**
+	 * @var string
+	 */
+	private $description;
+
+	/**
 	 * @var callable[][][]
 	 */
 	private $events;
 
-	public function __construct()
+	public function __construct($name, $description)
 	{
+		$this->name = $name;
+		$this->description = $description;
+
 		NielsBot::getInstance()->registerPlugin($this);
 	}
 
@@ -50,5 +63,21 @@ class Plugin
 	public function getEvents()
 	{
 		return $this->events;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->name;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDescription()
+	{
+		return $this->description;
 	}
 }

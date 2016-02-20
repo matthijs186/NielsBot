@@ -59,7 +59,7 @@ class NielsBot
 	 */
 	public function getEmojiParser()
 	{
-		if($this->emojiParser == null)
+		if ($this->emojiParser == null)
 			$this->emojiParser = new EmojiParser();
 
 		return $this->emojiParser;
@@ -72,7 +72,7 @@ class NielsBot
 	 */
 	public function triggerEvent($event, $type, $payload)
 	{
-		if($payload == null && $type != null) {
+		if ($payload == null && $type != null) {
 			$payload = $type;
 			$type = null;
 		}
@@ -82,18 +82,26 @@ class NielsBot
 
 			if (isset($events[$event])) {
 				if (isset($events[$event][$type])) {
-					foreach($events[$event][$type] as $callable) {
+					foreach ($events[$event][$type] as $callable) {
 						$callable($payload);
 					}
 				}
 
 				if (isset($events[$event]['*'])) {
-					foreach($events[$event]['*'] as $callable) {
+					foreach ($events[$event]['*'] as $callable) {
 						$callable($payload);
 					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * @return Plugin[]
+	 */
+	public function getPlugins()
+	{
+		return $this->plugins;
 	}
 
 	/**

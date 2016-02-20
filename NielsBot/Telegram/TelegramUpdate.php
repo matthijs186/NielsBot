@@ -19,7 +19,7 @@ class TelegramUpdate
 			if(substr(trim($update['text']), 0, 1) == '/'){
 				$parts = explode(' ', substr(trim($update['text']), 1), 2); //TODO bot @mention support for commands (example: /help@NielsBot)
 				print_r($parts);
-				$this->trigger('command', $parts[0], new CommandEvent($chat, $parts[0], $parts[1]));
+				$this->trigger('command', $parts[0], new CommandEvent($chat, $parts[0], $parts[1] ?? ''));
 			}else {
 				$this->trigger('message', new MessageEvent($chat, $update['text']));
 			}
