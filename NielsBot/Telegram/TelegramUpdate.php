@@ -13,13 +13,13 @@ class TelegramUpdate
 		$chat = new TelegramChat($update['chat'] ?? null);
 		//$user = new TelegramUser($update['from'] ?? null);
 
-		print_r($update);
+		//print_r($update);
 
 		if(isset($update['text'])) {
 			if(substr(trim($update['text']), 0, 1) == '/'){
-				$parts = explode(' ', substr(trim($update['text']), 1), 2); //TODO bot @mention support for commands (example: /help@NielsBot)
-				print_r($parts);
-				$this->trigger('command', $parts[0], new CommandEvent($chat, $parts[0], $parts[1] ?? ''));
+				preg_match('/\/([A-Za-z0-9]+)(?:[\@\w]+|)[ ]{0,1}(.+|)/', $update['text'], $matches);
+
+				$this->trigger('command', $matches[1], new CommandEvent($chat, $matches[1], $matches[2] ?? ''));
 			}else {
 				$this->trigger('message', new MessageEvent($chat, $update['text']));
 			}
