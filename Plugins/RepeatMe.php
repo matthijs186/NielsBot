@@ -8,7 +8,7 @@ $repeatMe = new Plugin('RepeatMe', 'Annoying plugin repeating certain messages.'
 $repeatMe->on('message', function(MessageEvent $event){
 	$message = $event->getMessage();
 
-	$emoticons = [':)', ':c', 'c:', ':(', ':\')', ':\'(', ':d', ':s', ';)', ':3', ':u', '( ͡° ͜ʖ ͡°)'];
+	$emoticons = [':)', ':c', 'c:', ':(', ':\')', ':\'(', ':d', ':s', ';)', ':3', ':u', ':o', '( ͡° ͜ʖ ͡°)'];
 	if(in_array(strtolower($message), $emoticons))
 		$event->getChat()->sendMessage($message);
 });
